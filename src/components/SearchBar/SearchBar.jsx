@@ -1,51 +1,33 @@
-import { Component } from 'react';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import css from './SearchBar.module.css';
 import PropTypes from 'prop-types';
-import {
-  SearchBar,
-  SerchForm,
-  Input,
-  SearchBtn,
-  SerchFormBtnLabel,
-} from './SearchBar.styled';
-export default class SearhBar extends Component {
-  state = {
-    searchQuery: '',
-  };
-  handleChange = evt => {
-    this.setState({ searchQuery: evt.currentTarget.value.toLowerCase() });
-  };
-  handleSubmit = evt => {
-    evt.preventDefault();
-    if (this.state.searchQuery.trim() === '') {
-      toast.error('Please enter something');
-      return;
-    }
-    this.props.onSubmit(this.state.searchQuery);
-    this.setState({ searchQuery: '' });
-  };
-  render() {
-    return (
-      <SearchBar>
-        <SerchForm onSubmit={this.handleSubmit}>
-          <Input
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            name="serchQuery"
-            value={this.state.searchQuery}
-            onChange={this.handleChange}
-          />
-          <SearchBtn type="submit">
-            <SerchFormBtnLabel>Search</SerchFormBtnLabel>
-          </SearchBtn>
-        </SerchForm>
-      </SearchBar>
-    );
-  }
-}
+import ButtonClear from 'components/ButtonClear/ButtonClear';
+
+const SearchBar = ({ onSubmit, onChange, onClickClear, inputValue }) => (
+  <header className={css.searchBar}>
+    <form className={css.searchForm} onSubmit={onSubmit}>
+      <button type="submit" className={css.searchFormButton}>
+        <span className={css.searchFormButtonLabel}>Search</span>
+      </button>
+      <input
+        className={css.searchFormInput}
+        type="text"
+        name="query"
+        autoComplete="off"
+        autoFocus
+        placeholder="Search images and photos"
+        onChange={onChange}
+        value={inputValue}
+      />
+      {inputValue && <ButtonClear onClickClear={onClickClear} />}
+    </form>
+  </header>
+);
+
 SearchBar.propTypes = {
   onSubmit: PropTypes.func,
+  onChange: PropTypes.func,
+  onClickClear: PropTypes.func,
+  query: PropTypes.string,
 };
+
+export default SearchBar;
